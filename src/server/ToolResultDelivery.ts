@@ -9,6 +9,7 @@ import { safeParseEvidence } from "../domain/evidenceValidation.js";
 import {
   omitUnretainedEvidenceFromError,
   projectAnalysisError,
+  projectAnalysisErrorWithoutPartialObservation,
   unretainedEvidenceCandidates,
   type AnalysisErrorProjection,
 } from "../domain/analysisErrorProjection.js";
@@ -315,10 +316,11 @@ export class ToolResultDelivery {
           details: {
             ...projected.details,
             partial_observation: {
-              kind: "inline-evidence",
-              retention: "unknown",
+              kind: "unretained-evidence",
               evidence: partial.value,
             },
+            partial_observation_retention_error:
+              projectAnalysisErrorWithoutPartialObservation(recorded.error),
           },
         },
         targetContent,
